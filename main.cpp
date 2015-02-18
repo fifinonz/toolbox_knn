@@ -17,7 +17,7 @@ using namespace std;
 
 int main (int argc, char*argv[])
 {
-	// Create query instance
+	// Create query instance object
 	Classify P(3,7);
 
 	// Classify and print result

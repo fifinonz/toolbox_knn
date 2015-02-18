@@ -26,8 +26,8 @@ class Classify
 	void setTrainingData();
 
 	private:
-	vector<vector<double>> trainingData;
-	vector<vector<double>> catDistance;
+	typedef vector<vector<double>> trainingData;
+	typedef vector<vector<double>> catDistance;
 	string category;
 };
 

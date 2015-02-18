@@ -19,10 +19,28 @@ using namespace std;
 {
 	double xValue=x;
 	double yValue=y;
-	nearNeighbours(x,y); // Step 2 find neighbours
+	nearNeighbours(xValue,yValue); // Step 2 find neighbours
 
 } // end constructor
 
+// Initialise training data
+void Classify::setTrainingData()
+{
+	trainingData T;
+
+	T[0][0]=7;
+	T[0][1]=7;
+	T[0][2]=0;
+	T[1][0]=7;
+	T[1][1]=4;
+	T[1][2]=0;
+	T[2][0]=3;
+	T[2][1]=4;
+	T[2][2]=1;
+	T[3][0]=1;
+	T[3][1]=4;
+	T[3][2]=1;
+}
 // Function to calculate Eucledian Distances
 void Classify::nearNeighbours(double x, double y)
 {	
@@ -32,9 +50,9 @@ void Classify::nearNeighbours(double x, double y)
 	{
 		for(int j=0; j<=1; j++ )
 		{			
-			sqrDistance=pow((trainingData[i][j]-x),2) + pow((trainingData[i][j+1]-y),2);
+			sqrDistance=pow((T[i][j]-x),2) + pow((T[i][j+1]-y),2);
 			catDistance[i][j]=sqrDistance;
-			catDistance[i][j+1]=trainingData[i][j+2];
+			catDistance[i][j+1]=T[i][j+2];
 		}	 //end inner for
 	}// end outer for
 			sortDistance(); // call sorting function
@@ -61,7 +79,7 @@ string Classify::categoryClass()  // step 5
 
 			for (int n=0; n<1; n++)
 				{	// calculate simple majority
-				if (trainingData[m][n+1]==label)
+				if (T[m][n+1]==label)
 					{	
 					majority++;				
 					} //end-if
@@ -86,19 +104,4 @@ return category;
 // Third column represents the category i.e
 // 1 == Category 1, 2 == Category 2 etc
 
-void Classify::setTrainingData()
-{
 
-	trainingData[0][0]=7;
-	trainingData[0][1]=7;
-	trainingData[0][2]=0;
-	trainingData[1][0]=7;
-	trainingData[1][1]=4;
-	trainingData[1][2]=0;
-	trainingData[2][0]=3;
-	trainingData[2][1]=4;
-	trainingData[2][2]=1;
-	trainingData[3][0]=1;
-	trainingData[3][1]=4;
-	trainingData[3][2]=1;
-}
