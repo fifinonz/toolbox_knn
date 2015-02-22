@@ -10,25 +10,28 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <cstring>
+#include <string>
+#define MAX 50
 
-using namespace std;
-
+ //  declares empty 2D-arrays constructed from STL vectors
+	
 class Classify
 {
 	public:
 	double xValue;
 	double yValue;
+
 	Classify (double,double); // constructor that initialises query object
 	void nearNeighbours(double,double); //calculate distance to each training instance
 	void sortDistance(); // rank K neighbours
-	string categoryClass(); // determine classification
+	std::string categoryClass(); // determine classification
 	void setTrainingData();
 
 	private:
-	typedef vector<vector<double>> trainingData;
-	typedef vector<vector<double>> catDistance;
-	string category;
+	std::vector<std::vector<double>> trainingData;
+	std::vector<std::vector<double>> catDistance;
+
+	std::string category;
 };
 
 #endif
