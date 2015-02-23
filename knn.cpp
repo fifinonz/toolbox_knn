@@ -37,20 +37,20 @@ void Classify::setTrainingData()
 	// store values
 	trainingData.back().at(0)=7; 	
 	trainingData.back().at(1)=7;
-	trainingData.back().at(3)=0;
+	trainingData.back().at(2)=0;
 	
 /*Category 2*/
 	trainingData.push_back(vector<double>(3,0)); // create 3-element row
 	// store values
 	trainingData.back().at(0)=3; 	
 	trainingData.back().at(1)=4;
-	trainingData.back().at(3)=1;
+	trainingData.back().at(2)=1;
 /*Category 3*/
 	trainingData.push_back(vector<double>(3,0)); // create 3-element row
 	// store values
 	trainingData.back().at(0)=1; 	
 	trainingData.back().at(1)=4;
-	trainingData.back().at(3)=1;
+	trainingData.back().at(2)=1;
 	
 }
 // Function to calculate Eucledian Distances
@@ -58,22 +58,28 @@ void Classify::nearNeighbours(double xValue, double yValue)
 {	
 	double sqrDistance, temp1, temp2;
 	
-	for(vector<double>::const_iterator i = trainingData->begin(); i != trainingData->end(); i++)
+	for(double i =0; i<(double)trainingData.size(); i++)
 	{
-		for(vector<double>::const_iterator j = trainingData->begin(); i != trainingData->end(); j++)
+		for(double j =0; j<(double)trainingData.size(); j++)
 		{	
-			temp1 = trainingData[i][j];
+			temp1 = trainingData.at(i).at(j);
 			temp1-=xValue;
 			temp1=temp1*temp1;	
 		
-			temp2 = trainingData[i][j+1];
+			temp2 =  trainingData.at(i).at(j+1);
 			temp1-=yValue;
 			temp2=temp2*temp2;	
 	
 			sqrDistance=temp1+temp2;
 
-			Q[i][j].push_back(sqrDistance);
-			Q[i][j+1].push_back(trainingData[i][j+2]);
+ // create 2-element row to store result
+	catDistance.push_back(vector<double>(2,0));
+	
+	//store values	
+	catDistance.back().at(0)=sqrDistance; 	
+	catDistance.back().at(1)= trainingData.at(i).at(j+2);
+	
+			
 		}	 //end inner for
 	}// end outer for
 			sortDistance(); // call sorting function
@@ -82,7 +88,7 @@ void Classify::nearNeighbours(double xValue, double yValue)
 // Function sorts the squared distances 
 void Classify::sortDistance()
 {
-	    sort(Q.begin(), Q.end(), [](const vector< double >& a, const vector< double >& b){ return a[1] > b[1]; } ); //step 3
+	    sort(catDistance.begin(), catDistance.end(), [](const vector< double >& a, const vector< double >& b){ return a[1] > b[1]; } ); //step 3
 
 		
 }//End Function
@@ -97,11 +103,11 @@ string Classify::categoryClass()  // step 5
 	{
 		for (int m=0; m<K; m++)
 			{	
-				label=Q[m][1];
+				label=catDistance.at(m).at(1);
 
 			for (int n=0; n<1; n++)
 				{	// calculate simple majority
-				if (trainingData[m][n+1]==label)
+				if (trainingData.at(m).at(n+1)==label)
 					{	
 					majority++;				
 					} //end-if

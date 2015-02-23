@@ -30,7 +30,6 @@ class Classify
 	private:
 	std::vector<std::vector<double>> trainingData;
 	std::vector<std::vector<double>> catDistance;
-
 	std::string category;
 };
 
