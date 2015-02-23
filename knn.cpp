@@ -18,34 +18,39 @@ using namespace std;
 	Classify::Classify (double x, double y)
 {	
 	
-	double xValue=x;
-	double yValue=y;
-	nearNeighbours(xValue,yValue); // Step 2 find neighbours
+	xValue=x;
+	yValue=y;
 
+	setTrainingData(); // Initialise training data
+	nearNeighbours(xValue,yValue); // Step 2 & 3 find neighbours
+	sortDistance(); // step 4 sort
+	categoryClass(); // step 5 determine classification
 } // end constructor
 
-// Initialise training data
-void Classify::setTrainingData()
-{
-	/*Training Data*/
+/*Training Data*/
 
 // Third column represents the category i.e
-// 1 == Category 1, 2 == Category 2 etc
+// 0 == Category 1, 
+// 1 == Category 2...  etc
 
-/*Category 1*/
+void Classify::setTrainingData()
+{
+	
+
+/*Row 1*/
 	trainingData.push_back(vector<double>(3,0)); // create 3-element row
 	// store values
 	trainingData.back().at(0)=7; 	
 	trainingData.back().at(1)=7;
 	trainingData.back().at(2)=0;
 	
-/*Category 2*/
+/*Row 2*/
 	trainingData.push_back(vector<double>(3,0)); // create 3-element row
 	// store values
 	trainingData.back().at(0)=3; 	
 	trainingData.back().at(1)=4;
 	trainingData.back().at(2)=1;
-/*Category 3*/
+/*Row 3*/
 	trainingData.push_back(vector<double>(3,0)); // create 3-element row
 	// store values
 	trainingData.back().at(0)=1; 	
@@ -60,14 +65,14 @@ void Classify::nearNeighbours(double xValue, double yValue)
 	
 	for(double i =0; i<(double)trainingData.size(); i++)
 	{
-		for(double j =0; j<(double)trainingData.size(); j++)
+		for(double j =0; j<1; j++)
 		{	
 			temp1 = trainingData.at(i).at(j);
 			temp1-=xValue;
 			temp1=temp1*temp1;	
 		
 			temp2 =  trainingData.at(i).at(j+1);
-			temp1-=yValue;
+			temp2-=yValue;
 			temp2=temp2*temp2;	
 	
 			sqrDistance=temp1+temp2;
@@ -77,55 +82,80 @@ void Classify::nearNeighbours(double xValue, double yValue)
 	
 	//store values	
 	catDistance.back().at(0)=sqrDistance; 	
-	catDistance.back().at(1)= trainingData.at(i).at(j+2);
+	catDistance.back().at(1)= trainingData.at(i).at(2);
 	
 			
 		}	 //end inner for
 	}// end outer for
-			sortDistance(); // call sorting function
+			
 } // end distance function
 
 // Function sorts the squared distances 
 void Classify::sortDistance()
 {
-	    sort(catDistance.begin(), catDistance.end(), [](const vector< double >& a, const vector< double >& b){ return a[1] > b[1]; } ); //step 3
+	    sort(catDistance.begin(), catDistance.end(), [](const vector< double >& a, const vector< double >& b){ return a[1] > b[1]; } ); 
 
 		
 }//End Function
 
 //Function to catgorise
-string Classify::categoryClass()  // step 5
+void Classify::categoryClass() 
 {	
-	double label;
-	double majority=0;
+	double countCat1=0;
+	double countCat2=0;
+	double countCat3=0;
+	double value;
 	
-	while( majority=0 || K/majority<=0.5)
-	{
-		for (int m=0; m<K; m++)
+		for (double m=0; m<K; m++)
 			{	
-				label=catDistance.at(m).at(1);
-
-			for (int n=0; n<1; n++)
-				{	// calculate simple majority
-				if (trainingData.at(m).at(n+1)==label)
+		for (double n=0; n<1; n++)
+			{				
+				value = catDistance.at(m).at(n+1);
+				// calculate simple majority
+				if (value==0)
 					{	
-					majority++;				
+					countCat1++;				
 					} //end-if
-				}// end inner for
-			}// end outer for
-	}// end while-loop
+				else if (value==1)
+					{	
+					countCat2++;				
+					} //end-if
+				else 
+					{	
+					countCat3++;				
+					} //end-if
+			}// end outer for-loop	
+			}// end outer for-loop
+		
 	
-	// Return Category	
-		if (label==1){
+	// Categorize	
+		if (countCat1>countCat2 && countCat1>countCat3){
 		category="Category 1";
 		}
-		else if (label==2){
+		else if (countCat2>countCat1 && countCat2>countCat3){
 		category = "Category 2";
 		}
-		else{
+		else { 
 		category = "Category 3";
-		} 	//<---- Edit to add as many categories as needed ---->
-return category;
+		} 
+	//<---- Edit to add as many categories as needed ---->
+
 }//End Function
 
+// return category
+string Classify::getCategory()
+{
+	return category;
+}
 
+// return x value
+double Classify::getXvalue()
+{
+	return xValue;
+}
+
+// return y value
+double Classify::getYvalue()
+{
+	return yValue;
+}
